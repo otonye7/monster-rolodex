@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
+import CardList from './components/card-list/card-list.component';
+import SearchBox from './components/search-box/search-box.component';
 
 function App() {
 
   const [data, setData] = useState([]);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     loadData()
@@ -15,15 +18,20 @@ function App() {
     setData(res.data)
   }
 
+  const handleChange = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const searchResult = data.filter((result) => {
+    return(
+      result.name.toLowerCase().includes(search.toLowerCase())
+    )
+  })
+
   return (
     <div className="App">
-        {
-          data.map((result) => {
-            return(
-              <h2 key={result.id}>{result.name}</h2>
-            )
-          })
-        }
+      <SearchBox handleChange={handleChange} />
+      <CardList searchResult={searchResult} placeholder='Search Monsters'/>
     </div>
   );
 }
